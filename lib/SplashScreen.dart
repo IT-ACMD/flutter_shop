@@ -41,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen>
       opacity: _animation,
       child: Image.asset(
         'images/splash_screen.png',
-        //'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1570617373504&di=b58276a337210c7f56cbd4ab26fb2eed&imgtype=0&src=http%3A%2F%2Fwx2.sinaimg.cn%2Fcrop.0.0.1797.1009.1000%2F005NLzplly1fvf2rfe838j31jm0s2gv8.jpg',
         fit: BoxFit.cover,
       ),
     );

@@ -31,7 +31,7 @@ class _IndexState extends State<Index> {
   bool isLoadingCallbackPage = false;
   //当前加载页面
   String selectedUrl =
-      'https://www.tinhtinh.com.kh/'; //'htttp://www.baidu.com';//
+      'https://www.tinhtinh.com.kh/home?tarbar=1'; //'htttp://www.baidu.com';//
   // 标记是否是加载中
   bool loading = false;
   //头部
@@ -72,12 +72,29 @@ class _IndexState extends State<Index> {
     _onScrollYChanged =
         flutterWebViewPlugin.onScrollYChanged.listen((double y) {
       if (mounted) {
-        parseResult();
+        //parseResult();
         setState(() {});
       }
     });
     //webview路径监听
-    _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {});
+    _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
+      //changeTabBarByUrl(url);
+      if (url.contains("home")) {
+      _nowindex = 0;
+      titleStr = "Home";
+    } else if (url.contains("categories")) {
+      _nowindex = 1;
+      titleStr = "Categories";
+    } else if (url.contains("shop-car")) {
+      _nowindex = 2;
+      titleStr = "Cart";
+    } else if (url.contains("user")) {
+      _nowindex = 3;
+      titleStr = "Account";
+    }
+    setState(() {});
+    parseResult();
+    });
     //webview加载失败
     _onhttpError =
         flutterWebViewPlugin.onHttpError.listen((WebViewHttpError e) {
@@ -92,8 +109,8 @@ class _IndexState extends State<Index> {
       switch (state.type) {
         case WebViewState.shouldStart:
           // 准备加载
-          loading = true;
-          //parseResult();
+          //loading = true;
+          parseResult();
           break;
         case WebViewState.startLoad:
           // 开始加载
@@ -110,7 +127,7 @@ class _IndexState extends State<Index> {
           break;
       }
     });
-    _onRefresh(0);
+    //_onRefresh(0);
     //flutterWebViewPlugin.launch(selectedUrl);
   }
 
@@ -151,8 +168,8 @@ class _IndexState extends State<Index> {
 
   // 解析WebView中的数据
   void parseResult() {
-    flutterWebViewPlugin
-        .evalJavascript("\$('.tabBar').css('display','none');");
+    flutterWebViewPlugin.evalJavascript("\$('.tabBar').css('display','none');");
+    //\$(document).ready(function(){});
   }
 
   @override
@@ -234,40 +251,61 @@ class _IndexState extends State<Index> {
   }
 
   //点击导航跳转不同路径页面
+  changeTabBarByUrl(String url) {
+    if (url.contains("home")) {
+      _nowindex = 0;
+      titleStr = "Home";
+    } else if (url.contains("categories")) {
+      _nowindex = 1;
+      titleStr = "Categories";
+    } else if (url.contains("shop-car")) {
+      _nowindex = 2;
+      titleStr = "Cart";
+    } else if (url.contains("user")) {
+      _nowindex = 3;
+      titleStr = "Account";
+    }
+    setState(() {});
+    parseResult();
+  }
+
+  //点击导航跳转不同路径页面
   Future<Null> _onRefresh(index) {
     if (_nowindex != index) {
       _nowindex = index;
       if (_nowindex == 0) {
         titleStr = "Home";
-        selectedUrl = "https://www.tinhtinh.com.kh/";
+        selectedUrl = "https://www.tinhtinh.com.kh/home?tarbar=1";
       } else if (_nowindex == 1) {
-        /*titleStr = "Download";
-        selectedUrl =
-            "https://www.tinhtinh.com.kh/download/TinhTinh_User_Guide_cn.pdf";*/
         titleStr = "Categories";
-        selectedUrl = "https://www.tinhtinh.com.kh/categories";
+        selectedUrl = "https://www.tinhtinh.com.kh/categories?tarbar=0";
         //selectedUrl = "http://tinh.shningmi.com/categories";
       } else if (_nowindex == 2) {
         titleStr = "Cart";
-        selectedUrl = "https://www.tinhtinh.com.kh/shop-car";
+        selectedUrl = "https://www.tinhtinh.com.kh/shop-car?tarbar=0";
       } else if (_nowindex == 3) {
         titleStr = "Account";
-        selectedUrl = "https://www.tinhtinh.com.kh/user/dashboard";
-        //selectedUrl = "http://tinh.shningmi.com/login";
+        selectedUrl = "https://www.tinhtinh.com.kh/user/dashboard?tarbar=0";
       }
+
+      //flutterWebViewPlugin.close();
+      //flutterWebViewPlugin.launch(selectedUrl);
       loading = true;
-      setState(() {});
-      flutterWebViewPlugin.reloadUrl(selectedUrl);
-      Future.delayed(Duration(seconds: 3), () {
+      flutterWebViewPlugin.reloadUrl(selectedUrl).then((val) {
+        setState(() {});
+        loading = false;
+        parseResult();
+      });
+      /*Future.delayed(Duration(seconds: 3), () {
         if (loading) {
           setState(() {
-            loading = !loading;
+            loading = false;
             //Toast.show(context, "加载完成");
           });
         }
       }).then((res) {
         parseResult();
-      });
+      });*/
     }
   }
 

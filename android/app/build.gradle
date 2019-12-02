@@ -43,8 +43,8 @@ android {
         applicationId "com.tinhtinhapp"//com.example.flutter_app //cn.tinh_shop
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 4000004//flutterVersionCode.toInteger()
-        versionName '4.0.0.04'//flutterVersionName
+        versionCode 4000008//flutterVersionCode.toInteger()
+        versionName '4.0.0.08'//flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
